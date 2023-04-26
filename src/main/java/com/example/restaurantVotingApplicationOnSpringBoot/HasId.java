@@ -1,6 +1,7 @@
 package com.example.restaurantVotingApplicationOnSpringBoot;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.util.Assert;
 
 public interface HasId {
     Integer getId();
@@ -12,4 +13,8 @@ public interface HasId {
         return getId() == null;
     }
 
+    default int id() {
+        Assert.notNull(getId(), "Entity must has id");
+        return getId();
+    }
 }

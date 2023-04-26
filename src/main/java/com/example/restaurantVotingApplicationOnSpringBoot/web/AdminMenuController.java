@@ -17,10 +17,10 @@ import java.net.URI;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = MenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class MenuController {
+@RequestMapping(value = AdminMenuController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class AdminMenuController {
 
-    public static final String REST_URL = "/admin/menu";
+    public static final String REST_URL = "/api/admin/menu";
 
     private MenuRepository menuRepository;
 

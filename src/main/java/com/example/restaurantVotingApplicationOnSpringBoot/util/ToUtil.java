@@ -47,13 +47,13 @@ public class ToUtil {
                 restaurantWithoutMenuDto.getId(), restaurantWithoutMenuDto.getName(), null, null);
     }
 
-    public static RestaurantWithoutMenuDto restaurantToRestaurantWithoutMenuDto(Restaurant restaurant) {
+    /*public static RestaurantWithoutMenuDto restaurantToRestaurantWithoutMenuDto(Restaurant restaurant) {
         return new RestaurantWithoutMenuDto(restaurant.getId(), restaurant.getName());
     }
 
     public static Restaurant restaurantDtoToRestaurant(AdminRestaurantDto adminRestaurantDto) {
         return new Restaurant(adminRestaurantDto.getId(), adminRestaurantDto.getName(), null, null);
-    }
+    }*/
 
     public static List<VotesDto> votesToVotesDto(List<Vote> votes) {
         Map<String, Integer> voting = new LinkedHashMap<>();
@@ -67,7 +67,7 @@ public class ToUtil {
         return votesDto;
     }
 
-    public static VoteDto voteToVoteDto(Integer voteId, Integer userId, Integer restaurantId) {
+    /*public static VoteDto voteToVoteDto(Integer voteId, Integer userId, Integer restaurantId) {
         return new VoteDto();
     }
 
@@ -79,7 +79,7 @@ public class ToUtil {
     public static User userDtoToUser(UserDto userDto) {
         return new User(userDto.getId(), userDto.getName(), userDto.getEmail(), userDto.getEnabled(),
                 userDto.getPassword(), userDto.getRoles(), null);
-    }
+    }*/
 
     public static UserMenuDto menuToUserMenuDto(Menu menu) {
         return new UserMenuDto(menu.getId(), menu.getName(), menu.getPrice());

@@ -14,15 +14,10 @@ public class VoteDto extends AbstractBaseDto {
 
     @NotNull
     @Min(1)
-    private Integer userId;
-
-    @NotNull
-    @Min(1)
     private Integer restaurantId;
 
-    public VoteDto(Integer id, Integer userId, Integer restaurantId) {
+    public VoteDto(Integer id, Integer restaurantId) {
         super(id);
-        this.userId = userId;
         this.restaurantId = restaurantId;
     }
 }

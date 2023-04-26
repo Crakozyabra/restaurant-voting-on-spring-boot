@@ -8,7 +8,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,9 +19,6 @@ import java.util.Set;
 @Table(name = "users")
 @Getter @Setter
 @NoArgsConstructor
-@NamedEntityGraph(name = "userWithJoinFetchRoles", attributeNodes = {
-        @NamedAttributeNode("roles")
-})
 public class User extends AbstractNamedEntity {
 
     @Column(name = "email", nullable = false, unique = true)
@@ -52,5 +52,13 @@ public class User extends AbstractNamedEntity {
         this.password = password;
         this.roles = roles;
         this.votes = votes;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
+    }
+
+    public boolean hasRole(Role role) {
+        return roles != null && roles.contains(role);
     }
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-
 @Getter
 @NoArgsConstructor
 public abstract class AbstractNamedDto extends AbstractBaseDto {
