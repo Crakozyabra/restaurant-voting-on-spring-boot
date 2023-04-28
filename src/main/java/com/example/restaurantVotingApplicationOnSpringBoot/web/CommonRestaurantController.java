@@ -22,7 +22,7 @@ public class CommonRestaurantController {
 
     private RestaurantRepository restaurantRepository;
 
-    @GetMapping("/restaurants")
+    @GetMapping("/restaurants/with-menu")
     public List<UserRestaurantDto> getAllWithVisibleMenu() {
         List<Restaurant> restaurants = restaurantRepository.getAllWithVisibleMenu();
         return restaurants.stream().map(ToUtil::restaurantToUserRestaurantTo).collect(Collectors.toList());

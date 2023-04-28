@@ -10,7 +10,8 @@ import com.example.restaurantVotingApplicationOnSpringBoot.repository.VoteReposi
 import com.example.restaurantVotingApplicationOnSpringBoot.to.vote.VoteDto;
 import com.example.restaurantVotingApplicationOnSpringBoot.to.vote.VotesDto;
 import com.example.restaurantVotingApplicationOnSpringBoot.util.ToUtil;
-import lombok.AllArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,17 +20,25 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @Transactional(readOnly = true)
 public class VoteService {
 
-    private final static LocalTime TIME_LIMIT_FOR_VOTING = LocalTime.of(11, 0, 0);
+    @Setter
+    private LocalTime timeVotingLimit;
 
     private VoteRepository voteRepository;
 
     private RestaurantRepository restaurantRepository;
 
     private UserRepository userRepository;
+
+    public VoteService(@Value("${time.voting.limit}") String timeVotingLimit, VoteRepository voteRepository,
+                       RestaurantRepository restaurantRepository, UserRepository userRepository) {
+        this.timeVotingLimit = LocalTime.parse(timeVotingLimit);
+        this.voteRepository = voteRepository;
+        this.restaurantRepository = restaurantRepository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional
     public VoteDto create(VoteDto voteDto, Integer userId) {
@@ -38,6 +47,12 @@ public class VoteService {
         Vote vote = voteRepository.save(new Vote(null, restaurant, user, null, null));
         voteDto.setId(vote.getId());
         return voteDto;
+    }
+
+    public VoteDto getByDate(Integer userId, LocalDate date) {
+        Vote vote = voteRepository.findVoteByUser_IdAndVotingDateIs(userId, date)
+                .orElseThrow(() -> new NotFoundException("Vote not found"));
+        return ToUtil.voteToVoteDto(vote);
     }
 
     public List<VotesDto> getAllResultsToday(LocalDate votingDay) {
@@ -50,8 +65,7 @@ public class VoteService {
         Vote vote = voteRepository.findVoteByUser_IdAndVotingDateIs(userId, LocalDate.now())
                 .orElseThrow(() -> new NotFoundException("Vote not found"));
         Restaurant restaurant = restaurantRepository.getReferenceById(voteDto.getRestaurantId());
-
-        if (vote.getVotingTime().isBefore(TIME_LIMIT_FOR_VOTING)) {
+        if (vote.getVotingTime().isBefore(timeVotingLimit)) {
             vote.setRestaurant(restaurant);
             voteRepository.save(vote);
         }

@@ -3,6 +3,7 @@ package com.example.restaurantVotingApplicationOnSpringBoot.web;
 import com.example.restaurantVotingApplicationOnSpringBoot.model.Menu;
 import com.example.restaurantVotingApplicationOnSpringBoot.repository.MenuRepository;
 import com.example.restaurantVotingApplicationOnSpringBoot.to.menu.AdminMenuDto;
+import com.example.restaurantVotingApplicationOnSpringBoot.to.menu.AdminMenuDtoWithoutRestaurantId;
 import com.example.restaurantVotingApplicationOnSpringBoot.util.ToUtil;
 import com.example.restaurantVotingApplicationOnSpringBoot.util.ValidationUtil;
 import jakarta.validation.Valid;
@@ -25,17 +26,19 @@ public class AdminMenuController {
     private MenuRepository menuRepository;
 
     @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestBody AdminMenuDto adminMenuDto) {
+    public ResponseEntity<AdminMenuDto> create(@Valid @RequestBody AdminMenuDto adminMenuDto) {
         ValidationUtil.checkNew(adminMenuDto);
         Menu created = menuRepository.save(ToUtil.adminMenuDtoToMenu(adminMenuDto));
         URI uriOfCreatedResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}").buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfCreatedResource).build();
+        return ResponseEntity.created(uriOfCreatedResource).body(ToUtil.menuToAdminMenuDto(created,
+                adminMenuDto.getRestaurantId()) );
     }
 
     @GetMapping("/{id}")
-    public AdminMenuDto get(@PathVariable Integer id) {
-        return ToUtil.menuToAdminMenuDto(menuRepository.findById(id).orElseThrow(IllegalArgumentException::new));
+    public AdminMenuDtoWithoutRestaurantId get(@PathVariable Integer id) {
+        return ToUtil.menuToAdminMenuDtoWithoutRestaurantId(
+                menuRepository.findById(id).orElseThrow(IllegalArgumentException::new));
     }
 
     @PutMapping("/{id}")

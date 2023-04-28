@@ -22,3 +22,12 @@ As a result, provide a link to github repository. It should contain the code, RE
 
 P.S.: Make sure everything works with latest version that is on github :)
 P.P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
+
+### Data for testing:
+
+* Reference to swagger UI : http://localhost:8080/swagger-ui/index.html
+
+* Credentials:
+    * user@gmail.com / user
+    * admin@gmail.com / admin
+    * guest@gmail.com / guest

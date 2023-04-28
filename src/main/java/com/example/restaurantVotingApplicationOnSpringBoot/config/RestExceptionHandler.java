@@ -82,6 +82,8 @@ public class RestExceptionHandler {
         String detail = getRootCause(ex).getMessage().toLowerCase();
         if (detail.contains(ONE_VOTE_PER_DATE_UNIQUE_CONSTRAINT)) {
             detail = "User already voted today";
+        } else {
+            detail = getRootCause(ex).getMessage();
         }
         String path = request.getRequestURI();
         Class<? extends Exception> exClass = ex.getClass();
