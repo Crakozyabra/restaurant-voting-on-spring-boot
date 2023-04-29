@@ -65,7 +65,10 @@ public class AdminRestaurantController {
     public void update(@Valid @RequestBody RestaurantWithoutMenuDto restaurantWithoutMenuDto,
                        @PathVariable Integer id) {
         ValidationUtil.assureIdConsistent(restaurantWithoutMenuDto, id);
-        restaurantRepository.save(ToUtil.restaurantWithoutMenuDtoToRestaurant(restaurantWithoutMenuDto));
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Restaurant not found"));
+        restaurant.setName(restaurantWithoutMenuDto.getName());
+        restaurantRepository.save(restaurant);
     }
 
     @DeleteMapping("/{id}")

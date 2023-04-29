@@ -3,8 +3,6 @@ package com.example.restaurantVotingApplicationOnSpringBoot.web;
 import com.example.restaurantVotingApplicationOnSpringBoot.service.VoteService;
 import com.example.restaurantVotingApplicationOnSpringBoot.to.vote.VoteDto;
 import com.example.restaurantVotingApplicationOnSpringBoot.to.vote.VotesDto;
-import com.example.restaurantVotingApplicationOnSpringBoot.util.ToUtil;
-import com.example.restaurantVotingApplicationOnSpringBoot.util.ValidationUtil;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -31,7 +29,6 @@ public class UserVoteController {
     @PostMapping
     public ResponseEntity<VoteDto> create(@Valid @RequestBody VoteDto voteDto,
                                           @AuthenticationPrincipal AuthUser authUser) {
-        ValidationUtil.checkNew(voteDto);
         VoteDto created = voteService.create(voteDto, authUser.id());
         URI uriOfCreatedResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/by-date").query("date=" + LocalDate.now()).build().toUri();
@@ -39,14 +36,14 @@ public class UserVoteController {
     }
 
     @GetMapping("/by-date")
-    public VoteDto getByDate(@Parameter(description = "format example: 2024-02-29", required = true)
+    public VoteDto getByDate(@Parameter(description = "Format example: 2024-02-29. Enter today date", required = true)
                                  @RequestParam LocalDate date,  @AuthenticationPrincipal AuthUser authUser) {
         return voteService.getByDate(authUser.id(), date);
     }
 
     @GetMapping
     public List<VotesDto> getAllResultsToday(
-            @Parameter(description = "format example: 2024-02-29", required = true) @RequestParam LocalDate date) {
+            @Parameter(description = "Format example: 2024-02-29. Enter today date", required = true) @RequestParam LocalDate date) {
         return voteService.getAllResultsToday(date);
     }
 

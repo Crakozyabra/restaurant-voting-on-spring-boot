@@ -1,7 +1,10 @@
 package com.example.restaurantVotingApplicationOnSpringBoot.web;
 
+import com.example.restaurantVotingApplicationOnSpringBoot.error.NotFoundException;
 import com.example.restaurantVotingApplicationOnSpringBoot.model.Menu;
+import com.example.restaurantVotingApplicationOnSpringBoot.model.Restaurant;
 import com.example.restaurantVotingApplicationOnSpringBoot.repository.MenuRepository;
+import com.example.restaurantVotingApplicationOnSpringBoot.repository.RestaurantRepository;
 import com.example.restaurantVotingApplicationOnSpringBoot.to.menu.AdminMenuDto;
 import com.example.restaurantVotingApplicationOnSpringBoot.to.menu.AdminMenuDtoWithoutRestaurantId;
 import com.example.restaurantVotingApplicationOnSpringBoot.util.ToUtil;
@@ -25,27 +28,38 @@ public class AdminMenuController {
 
     private MenuRepository menuRepository;
 
+    private RestaurantRepository restaurantRepository;
+
     @PostMapping
     public ResponseEntity<AdminMenuDto> create(@Valid @RequestBody AdminMenuDto adminMenuDto) {
         ValidationUtil.checkNew(adminMenuDto);
-        Menu created = menuRepository.save(ToUtil.adminMenuDtoToMenu(adminMenuDto));
+        Menu fromTo = ToUtil.adminMenuDtoToMenu(adminMenuDto);
+        Restaurant restaurant = restaurantRepository.getReferenceById(adminMenuDto.getRestaurantId());
+        fromTo.setRestaurant(restaurant);
+        Menu created = menuRepository.save(fromTo);
         URI uriOfCreatedResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}").buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfCreatedResource).body(ToUtil.menuToAdminMenuDto(created,
-                adminMenuDto.getRestaurantId()) );
+                adminMenuDto.getRestaurantId()));
     }
 
     @GetMapping("/{id}")
     public AdminMenuDtoWithoutRestaurantId get(@PathVariable Integer id) {
         return ToUtil.menuToAdminMenuDtoWithoutRestaurantId(
-                menuRepository.findById(id).orElseThrow(IllegalArgumentException::new));
+                menuRepository.findById(id).orElseThrow(() -> new NotFoundException("Menu not found")));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody AdminMenuDto adminMenuDto, @PathVariable Integer id) {
         ValidationUtil.assureIdConsistent(adminMenuDto, id);
-        menuRepository.save(ToUtil.adminMenuDtoToMenu(adminMenuDto));
+        Restaurant restaurant = restaurantRepository.getReferenceById(adminMenuDto.getRestaurantId());
+        Menu menu = menuRepository.findById(id).orElseThrow(() -> new NotFoundException("Menu not found"));
+        menu.setRestaurant(restaurant);
+        menu.setEnabled(adminMenuDto.getEnabled());
+        menu.setPrice(adminMenuDto.getPrice());
+        menu.setName(adminMenuDto.getName());
+        menuRepository.save(menu);
     }
 
     @DeleteMapping("/{id}")

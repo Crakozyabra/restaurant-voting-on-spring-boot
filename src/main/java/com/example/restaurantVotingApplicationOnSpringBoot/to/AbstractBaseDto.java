@@ -12,8 +12,7 @@ import lombok.Setter;
 @Getter @Setter
 public abstract class AbstractBaseDto implements HasId {
 
-    //@Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    @Schema(nullable = true, hidden = true)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     private Integer id;
 
     public AbstractBaseDto(Integer id) {

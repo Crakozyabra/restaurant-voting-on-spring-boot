@@ -13,7 +13,6 @@ import com.example.restaurantVotingApplicationOnSpringBoot.to.vote.VoteDto;
 import com.example.restaurantVotingApplicationOnSpringBoot.to.vote.VotesDto;
 import lombok.experimental.UtilityClass;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,10 +21,6 @@ import java.util.stream.Collectors;
 
 @UtilityClass
 public class ToUtil {
-
-    public static final String LD = LocalDate.now().toString();
-
-    public static final String DL = LD;
 
     public static AdminMenuDto menuToAdminMenuDto(Menu menu, Integer restaurantId) {
         return new AdminMenuDto(menu.getId(), menu.getName(), menu.getEnabled(), restaurantId,
@@ -47,7 +42,7 @@ public class ToUtil {
     }
 
     public static VoteDto voteToVoteDto(Vote vote) {
-        return  new VoteDto(vote.getId(), vote.getRestaurant().getId());
+        return  new VoteDto(vote.getRestaurant().getId());
     }
 
     public static AdminRestaurantDto restaurantToAdminRestaurantDto(Restaurant restaurant) {

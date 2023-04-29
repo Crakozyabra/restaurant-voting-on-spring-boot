@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
@@ -21,7 +20,8 @@ import java.util.Optional;
 import static com.example.restaurantVotingApplicationOnSpringBoot.UserTestData.*;
 import static com.example.restaurantVotingApplicationOnSpringBoot.web.UserVoteController.REST_URL;
 import static com.example.restaurantVotingApplicationOnSpringBoot.web.restaurant.RestaurantTestData.*;
-import static com.example.restaurantVotingApplicationOnSpringBoot.web.vote.VoteTestData.*;
+import static com.example.restaurantVotingApplicationOnSpringBoot.web.vote.VoteTestData.getSavedTo;
+import static com.example.restaurantVotingApplicationOnSpringBoot.web.vote.VoteTestData.getVoteResult;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -39,15 +39,14 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(USER_EMAIL)
     public void create() throws Exception {
         VoteDto newVoteDto = VoteTestData.getNewTo();
-        ResultActions resultActions = perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newVoteDto)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HEADER_LOCATION))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-        VoteDto response = VOTE_DTO_MATCHER.readFromJson(resultActions);
-        Optional<Vote> saved = voteRepository.findById(response.getId());
+        Optional<Vote> saved = voteRepository.findVoteByUser_IdAndVotingDateIs(USER_ID, LocalDate.now());
         Assertions.assertTrue(saved.isPresent());
         Assertions.assertEquals(saved.get().getRestaurant().getId(), newVoteDto.getRestaurantId());
     }
@@ -88,16 +87,14 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(ADMIN_EMAIL)
     public void updateBeforeTimeVotingLimit() throws Exception {
         voteService.setTimeVotingLimit(LocalTime.MAX);
-        Integer savedVoteId = getSavedTo().getId();
-        VoteDto forUpdate = new VoteDto(savedVoteId, RUSSIAN_RESTAURANT_ID);
+        VoteDto forUpdate = new VoteDto(RUSSIAN_RESTAURANT_ID);
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(forUpdate)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        Optional<Vote> updated = voteRepository.findById(savedVoteId);
+        Optional<Vote> updated = voteRepository.findVoteByUser_IdAndVotingDateIs(ADMIN_ID, LocalDate.now());
         Assertions.assertTrue(updated.isPresent());
-        Assertions.assertEquals(updated.get().getId(), savedVoteId);
         Assertions.assertEquals(updated.get().getRestaurant().getId(), RUSSIAN_RESTAURANT_ID);
     }
 
@@ -105,18 +102,14 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(ADMIN_EMAIL)
     public void updateAfterTimeVotingLimit() throws Exception {
         voteService.setTimeVotingLimit(LocalTime.MIN);
-        Integer savedVoteId = getSavedTo().getId();
-        VoteDto forUpdate = new VoteDto(savedVoteId, RUSSIAN_RESTAURANT_ID);
+        VoteDto forUpdate = new VoteDto(RUSSIAN_RESTAURANT_ID);
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(forUpdate)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        Optional<Vote> updated = voteRepository.findById(savedVoteId);
+        Optional<Vote> updated = voteRepository.findVoteByUser_IdAndVotingDateIs(ADMIN_ID, LocalDate.now());
         Assertions.assertTrue(updated.isPresent());
-        Assertions.assertEquals(updated.get().getId(), savedVoteId);
         Assertions.assertEquals(updated.get().getRestaurant().getId(), ITALIAN_RESTAURANT_ID);
     }
-
-
 }

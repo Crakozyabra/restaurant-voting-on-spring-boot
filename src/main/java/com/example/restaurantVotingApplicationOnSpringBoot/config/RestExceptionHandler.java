@@ -42,6 +42,8 @@ public class RestExceptionHandler {
 
     public static final String ONE_VOTE_PER_DATE_UNIQUE_CONSTRAINT = "one_vote_per_date_unique_constraint";
 
+    public static final String REFERENTIAL_INTEGRITY_CONSTRAINT_VIOLATION = "referential integrity constraint violation";
+
     @Getter
     private final MessageSource messageSource;
 
@@ -82,6 +84,8 @@ public class RestExceptionHandler {
         String detail = getRootCause(ex).getMessage().toLowerCase();
         if (detail.contains(ONE_VOTE_PER_DATE_UNIQUE_CONSTRAINT)) {
             detail = "User already voted today";
+        } else if (detail.contains(REFERENTIAL_INTEGRITY_CONSTRAINT_VIOLATION)) {
+            detail = "Referential integrity constraint violation. Possibility resource does not exist";
         } else {
             detail = getRootCause(ex).getMessage();
         }

@@ -30,4 +30,3 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 * Credentials:
     * user@gmail.com / user
     * admin@gmail.com / admin
-    * guest@gmail.com / guest

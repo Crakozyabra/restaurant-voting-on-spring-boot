@@ -44,8 +44,7 @@ public class VoteService {
     public VoteDto create(VoteDto voteDto, Integer userId) {
         Restaurant restaurant = restaurantRepository.getReferenceById(voteDto.getRestaurantId());
         User user = userRepository.getReferenceById(userId);
-        Vote vote = voteRepository.save(new Vote(null, restaurant, user, null, null));
-        voteDto.setId(vote.getId());
+        voteRepository.save(new Vote(null, restaurant, user, null, null));
         return voteDto;
     }
 

@@ -26,9 +26,8 @@ import org.springframework.context.annotation.Configuration;
                         <p><b>Test credentials:</b><br>
                         - user@gmail.com / user<br>
                         - admin@gmail.com / admin<br>
-                        - guest@gmail.com / guest</p>
                         """,
-                contact = @Contact(url = "none", name = "Ivan Golubev", email = "mrcrakozyabra@gmail.com")
+                contact = @Contact(url = "http://localhost:8080", name = "Ivan Golubev", email = "mrcrakozyabra@gmail.com")
         ),
         security = @SecurityRequirement(name = "basicAuth")
 )

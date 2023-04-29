@@ -15,7 +15,7 @@ public class MenuTestData {
             MatcherFactory.usingIgnoringFieldsComparator(AdminMenuDto.class);
 
     public static final MatcherFactory.Matcher<Menu> MENU_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(Menu.class, "restaurants");
+            MatcherFactory.usingIgnoringFieldsComparator(Menu.class, "restaurant");
 
     public static AdminMenuDto getNewTo() {
         return new AdminMenuDto(null, "New menu item", true, ITALIAN_RESTAURANT_ID, 100.0);
