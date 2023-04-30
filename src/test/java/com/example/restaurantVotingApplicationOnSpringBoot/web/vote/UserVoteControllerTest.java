@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static com.example.restaurantVotingApplicationOnSpringBoot.UserTestData.*;
 import static com.example.restaurantVotingApplicationOnSpringBoot.web.UserVoteController.REST_URL;
+import static com.example.restaurantVotingApplicationOnSpringBoot.web.UserVoteController.SUB_REST_URL_VOTES_PATH;
 import static com.example.restaurantVotingApplicationOnSpringBoot.web.restaurant.RestaurantTestData.*;
 import static com.example.restaurantVotingApplicationOnSpringBoot.web.vote.VoteTestData.getSavedTo;
 import static com.example.restaurantVotingApplicationOnSpringBoot.web.vote.VoteTestData.getVoteResult;
@@ -39,7 +40,7 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(USER_EMAIL)
     public void create() throws Exception {
         VoteDto newVoteDto = VoteTestData.getNewTo();
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL + SUB_REST_URL_VOTES_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newVoteDto)))
                 .andDo(print())
@@ -55,7 +56,7 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(GUEST_EMAIL)
     public void createNoAuth() throws Exception {
         VoteDto newVoteDto = VoteTestData.getNewTo();
-        perform(MockMvcRequestBuilders.post(REST_URL)
+        perform(MockMvcRequestBuilders.post(REST_URL + SUB_REST_URL_VOTES_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newVoteDto)))
                 .andDo(print())
@@ -65,8 +66,8 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ADMIN_EMAIL)
     public void getByDate() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "/by-date").queryParam("date",
-                LocalDate.now().toString()))
+        perform(MockMvcRequestBuilders.get(REST_URL + SUB_REST_URL_VOTES_PATH + "/by-date")
+                .queryParam("date", LocalDate.now().toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -76,7 +77,8 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(USER_EMAIL)
     public void getAllResultsToday() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL).queryParam("date", LocalDate.now().toString()))
+        perform(MockMvcRequestBuilders.get(REST_URL + SUB_REST_URL_VOTES_PATH)
+                .queryParam("date", LocalDate.now().toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -88,7 +90,7 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     public void updateBeforeTimeVotingLimit() throws Exception {
         voteService.setTimeVotingLimit(LocalTime.MAX);
         VoteDto forUpdate = new VoteDto(RUSSIAN_RESTAURANT_ID);
-        perform(MockMvcRequestBuilders.put(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL + SUB_REST_URL_VOTES_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(forUpdate)))
                 .andDo(print())
@@ -103,7 +105,7 @@ public class UserVoteControllerTest extends AbstractControllerTest {
     public void updateAfterTimeVotingLimit() throws Exception {
         voteService.setTimeVotingLimit(LocalTime.MIN);
         VoteDto forUpdate = new VoteDto(RUSSIAN_RESTAURANT_ID);
-        perform(MockMvcRequestBuilders.put(REST_URL)
+        perform(MockMvcRequestBuilders.put(REST_URL + SUB_REST_URL_VOTES_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(forUpdate)))
                 .andDo(print())

@@ -11,6 +11,7 @@ import com.example.restaurantVotingApplicationOnSpringBoot.util.ToUtil;
 import com.example.restaurantVotingApplicationOnSpringBoot.util.ValidationUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+
+import static com.example.restaurantVotingApplicationOnSpringBoot.web.UserVoteController.RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME;
 
 @RestController
 @AllArgsConstructor
@@ -31,6 +34,7 @@ public class AdminMenuController {
     private RestaurantRepository restaurantRepository;
 
     @PostMapping
+    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
     public ResponseEntity<AdminMenuDto> create(@Valid @RequestBody AdminMenuDto adminMenuDto) {
         ValidationUtil.checkNew(adminMenuDto);
         Menu fromTo = ToUtil.adminMenuDtoToMenu(adminMenuDto);
@@ -50,6 +54,7 @@ public class AdminMenuController {
     }
 
     @PutMapping("/{id}")
+    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody AdminMenuDto adminMenuDto, @PathVariable Integer id) {
         ValidationUtil.assureIdConsistent(adminMenuDto, id);
@@ -63,6 +68,7 @@ public class AdminMenuController {
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         menuRepository.deleteById(id);

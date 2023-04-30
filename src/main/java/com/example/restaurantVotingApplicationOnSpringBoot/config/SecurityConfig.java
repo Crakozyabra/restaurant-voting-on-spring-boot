@@ -58,7 +58,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/user/**").hasRole(Role.USER.name())
-                .requestMatchers("/api/common/**").permitAll()
                 .and().httpBasic()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

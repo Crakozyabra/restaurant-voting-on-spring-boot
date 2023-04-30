@@ -9,6 +9,7 @@ import com.example.restaurantVotingApplicationOnSpringBoot.util.ToUtil;
 import com.example.restaurantVotingApplicationOnSpringBoot.util.ValidationUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.restaurantVotingApplicationOnSpringBoot.web.UserVoteController.RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME;
 
 @RestController
 @AllArgsConstructor
@@ -61,6 +64,7 @@ public class AdminRestaurantController {
     }
 
     @PutMapping("/{id}")
+    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody RestaurantWithoutMenuDto restaurantWithoutMenuDto,
                        @PathVariable Integer id) {
@@ -72,6 +76,7 @@ public class AdminRestaurantController {
     }
 
     @DeleteMapping("/{id}")
+    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         restaurantRepository.deleteById(id);
