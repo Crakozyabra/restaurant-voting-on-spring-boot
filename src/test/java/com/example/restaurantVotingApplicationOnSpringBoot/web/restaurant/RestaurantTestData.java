@@ -27,13 +27,13 @@ public class RestaurantTestData {
             ITALIAN_RESTAURANT_ID, "Italian restaurant");
 
     public static AdminMenuDtoWithoutRestaurantId adminMenuDto1 =
-            new AdminMenuDtoWithoutRestaurantId(1, "pizza", false, 106.5);
+            new AdminMenuDtoWithoutRestaurantId(1, "pizza", false, 106L);
     public static AdminMenuDtoWithoutRestaurantId adminMenuDto2 =
-            new AdminMenuDtoWithoutRestaurantId(2, "risotto", true, 201.4);
+            new AdminMenuDtoWithoutRestaurantId(2, "risotto", true, 201L);
     public static AdminMenuDtoWithoutRestaurantId adminMenuDto3 =
-            new AdminMenuDtoWithoutRestaurantId(3, "lasagne", true, 302.3);
+            new AdminMenuDtoWithoutRestaurantId(3, "lasagne", true, 302L);
     public static AdminMenuDtoWithoutRestaurantId adminMenuDto4 =
-            new AdminMenuDtoWithoutRestaurantId(4, "ravioli", true, 403.2);
+            new AdminMenuDtoWithoutRestaurantId(4, "ravioli", true, 403L);
     public static AdminMenuDtoWithoutRestaurantId adminMenuDto5 =
-            new AdminMenuDtoWithoutRestaurantId(5, "bryschetta", true, 503.1);
+            new AdminMenuDtoWithoutRestaurantId(5, "bryschetta", true, 503L);
 }

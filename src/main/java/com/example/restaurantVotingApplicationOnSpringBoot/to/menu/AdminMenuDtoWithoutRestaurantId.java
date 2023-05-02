@@ -12,9 +12,9 @@ public class AdminMenuDtoWithoutRestaurantId extends AbstractEnabledDto {
 
     @Min(0)
     @NotNull
-    protected Double price;
+    protected Long price;
 
-    public AdminMenuDtoWithoutRestaurantId(Integer id, String name, Boolean enabled, Double price) {
+    public AdminMenuDtoWithoutRestaurantId(Integer id, String name, Boolean enabled, Long price) {
         super(id, name, enabled);
         this.price = price;
     }

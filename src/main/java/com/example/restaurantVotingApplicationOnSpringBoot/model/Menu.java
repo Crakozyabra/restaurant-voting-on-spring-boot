@@ -21,7 +21,7 @@ public class Menu extends AbstractNamedEntity {
     @Column(nullable = false)
     @Min(0)
     @NotNull
-    private Double price;
+    private Long price;
 
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
     @NotNull
@@ -32,7 +32,7 @@ public class Menu extends AbstractNamedEntity {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    public Menu(Integer id, String name, Double price, Boolean enabled, Restaurant restaurant) {
+    public Menu(Integer id, String name, Long price, Boolean enabled, Restaurant restaurant) {
         super(id, name);
         this.price = price;
         this.enabled = enabled;

@@ -36,7 +36,6 @@ public class ToUtil {
         return new AdminMenuDtoWithoutRestaurantId(menu.getId(), menu.getName(), menu.getEnabled(), menu.getPrice());
     }
 
-
     public static List<AdminMenuDtoWithoutRestaurantId> menusToAdminMenusDtoWithoutRestaurantId(List<Menu> menus) {
         return menus.stream().map(ToUtil::menuToAdminMenuDtoWithoutRestaurantId).collect(Collectors.toList());
     }
@@ -54,7 +53,6 @@ public class ToUtil {
     public static List<AdminRestaurantDto> restaurantsToRestaurantsTos(List<Restaurant> restaurants) {
         return restaurants.stream().map(ToUtil::restaurantToAdminRestaurantDto).collect(Collectors.toList());
     }
-
 
     public static Restaurant restaurantWithoutMenuDtoToRestaurant(RestaurantWithoutMenuDto restaurantWithoutMenuDto) {
         return new Restaurant(
@@ -89,8 +87,6 @@ public class ToUtil {
     public static List<UserRestaurantDto> restaurantsToUserRestaurantTos(List<Restaurant> restaurants) {
         return restaurants.stream().map(ToUtil::restaurantToUserRestaurantTo).collect(Collectors.toList());
     }
-
-
 
     public static RestaurantWithoutMenuDto restaurantToRestaurantWithoutMenuDto(Restaurant restaurant) {
         return new RestaurantWithoutMenuDto(restaurant.getId(), restaurant.getName());

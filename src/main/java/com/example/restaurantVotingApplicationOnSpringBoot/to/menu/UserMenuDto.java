@@ -23,5 +23,5 @@ public class UserMenuDto {
 
     @Min(0)
     @NotNull
-    private Double price;
+    private Long price;
 }
