@@ -16,13 +16,13 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", indexes = @Index(name = "email_idx", columnList = "email"))
+@Table(name = "users", indexes = @Index(name = "email_idx", columnList = "email", unique = true))
 @Getter @Setter
 @NamedEntityGraph(name = "withRoles", attributeNodes = @NamedAttributeNode("roles"))
 @NoArgsConstructor
 public class User extends AbstractNamedEntity {
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     @Email
     @NotBlank
     @Size(max = 128)
