@@ -30,3 +30,5 @@ P.P.S.: Assume that your API will be used by a frontend developer to build front
 * Credentials:
     * user@gmail.com / user
     * admin@gmail.com / admin
+
+* Reference to codacy : https://app.codacy.com/gh/Crakozyabra/restaurant-voting-on-spring-boot/dashboard
