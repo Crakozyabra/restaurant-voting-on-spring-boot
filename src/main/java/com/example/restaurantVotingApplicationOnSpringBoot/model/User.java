@@ -16,8 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = @Index(name = "email_idx", columnList = "email"))
 @Getter @Setter
+@NamedEntityGraph(name = "withRoles", attributeNodes = @NamedAttributeNode("roles"))
 @NoArgsConstructor
 public class User extends AbstractNamedEntity {
 
@@ -38,7 +39,8 @@ public class User extends AbstractNamedEntity {
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "role", joinColumns = @JoinColumn(name = "user_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role"}, name = "uk_user_role"))
     @Column(name = "role")
     private Set<Role> roles;
 
