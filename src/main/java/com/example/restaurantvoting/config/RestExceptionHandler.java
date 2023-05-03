@@ -47,7 +47,7 @@ public class RestExceptionHandler {
     @Getter
     private final MessageSource messageSource;
 
-    //    https://stackoverflow.com/a/52254601/548473
+    // https://stackoverflow.com/a/52254601/548473
     static final Map<Class<? extends Throwable>, ErrorType> HTTP_STATUS_MAP = new LinkedHashMap<>() {
         {
             put(NotFoundException.class, NOT_FOUND);
@@ -74,13 +74,14 @@ public class RestExceptionHandler {
         return processException(ex, request, Map.of("invalid_params", getErrorMap(ex.getBindingResult())));
     }
 
-    //   https://howtodoinjava.com/spring-mvc/spring-problemdetail-errorresponse/#5-adding-problemdetail-to-custom-exceptions
+    //  https://howtodoinjava.com/spring-mvc/spring-problemdetail-errorresponse/#5-adding-problemdetail-to-custom-exceptions
     @ExceptionHandler(Exception.class)
     ProblemDetail exception(Exception ex, HttpServletRequest request) {
         return processException(ex, request, Map.of());
     }
 
-    ProblemDetail processException(@NonNull Exception ex, HttpServletRequest request, Map<String, Object> additionalParams) {
+    ProblemDetail processException(@NonNull Exception ex, HttpServletRequest request,
+                                   Map<String, Object> additionalParams) {
         String detail = getRootCause(ex).getMessage().toLowerCase();
         if (detail.contains(ONE_VOTE_PER_DATE_UNIQUE_CONSTRAINT)) {
             detail = "User already voted today";
@@ -102,11 +103,13 @@ public class RestExceptionHandler {
         } else {
             Throwable root = getRootCause(ex);
             log.error(ERR_PFX + "Exception " + root + " at request " + path, root);
-            return createProblemDetail(ex, APP_ERROR, "Exception " + root.getClass().getSimpleName(), additionalParams);
+            return createProblemDetail(ex, APP_ERROR, "Exception " + root.getClass().getSimpleName(),
+                    additionalParams);
         }
     }
 
-    private ProblemDetail createProblemDetail(Exception ex, ErrorType type, String defaultDetail, @NonNull Map<String, Object> additionalParams) {
+    private ProblemDetail createProblemDetail(Exception ex, ErrorType type, String defaultDetail,
+                                              @NonNull Map<String, Object> additionalParams) {
         ErrorResponse.Builder builder = ErrorResponse.builder(ex, type.status, defaultDetail);
         ProblemDetail pd = builder.build().updateAndGetBody(messageSource, LocaleContextHolder.getLocale());
         additionalParams.forEach(pd::setProperty);
@@ -126,7 +129,8 @@ public class RestExceptionHandler {
     }
 
     private String getErrorMessage(ObjectError error) {
-        return messageSource.getMessage(error.getCode(), error.getArguments(), error.getDefaultMessage(), LocaleContextHolder.getLocale());
+        return messageSource.getMessage(error.getCode(), error.getArguments(), error.getDefaultMessage(),
+                LocaleContextHolder.getLocale());
     }
 
     //  https://stackoverflow.com/a/65442410/548473
