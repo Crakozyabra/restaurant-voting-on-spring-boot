@@ -1,7 +1,6 @@
 package com.example.restaurantvoting.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,18 +14,13 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "vote", uniqueConstraints =
-        {@UniqueConstraint(columnNames = {"user_id", "voting_date"}, name = "one_vote_per_date_unique_constraint")})
+        {@UniqueConstraint(columnNames = {"user_id", "vote_date"}, name = "one_vote_per_date_unique_constraint")})
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @NamedEntityGraph(name = "voteWithJoinFetchRestaurant", attributeNodes = {
         @NamedAttributeNode("restaurant")
 })
-public class Vote {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Vote extends AbstractBaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -39,10 +33,18 @@ public class Vote {
     private User user;
 
     @CreationTimestamp
-    @Column(name = "voting_date")
-    private LocalDate votingDate;
+    @Column(name = "vote_date", nullable = false)
+    private LocalDate voteDate;
 
     @UpdateTimestamp
-    @Column(name = "voting_time")
-    private LocalTime votingTime;
+    @Column(name = "vote_time", nullable = false)
+    private LocalTime voteTime;
+
+    public Vote(Integer id, Restaurant restaurant, User user, LocalDate voteDate, LocalTime voteTime) {
+        super(id);
+        this.restaurant = restaurant;
+        this.user = user;
+        this.voteDate = voteDate;
+        this.voteTime = voteTime;
+    }
 }

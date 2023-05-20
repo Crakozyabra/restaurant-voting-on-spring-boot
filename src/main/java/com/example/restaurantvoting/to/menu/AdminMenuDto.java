@@ -15,8 +15,8 @@ public class AdminMenuDto extends AdminMenuDtoWithoutRestaurantId {
     @NotNull
     private Integer restaurantId;
 
-    public AdminMenuDto(Integer id, String name, Boolean enabled, Integer restaurantId, Long price) {
-        super(id, name, enabled, price);
+    public AdminMenuDto(Integer id, String name, Integer restaurantId, Long price) {
+        super(id, name, price);
         this.restaurantId = restaurantId;
         this.price = price;
     }

@@ -10,30 +10,24 @@ import com.example.restaurantvoting.to.restaurant.AdminRestaurantDto;
 import com.example.restaurantvoting.to.restaurant.RestaurantWithoutMenuDto;
 import com.example.restaurantvoting.to.restaurant.UserRestaurantDto;
 import com.example.restaurantvoting.to.vote.VoteDto;
-import com.example.restaurantvoting.to.vote.VotesDto;
 import lombok.experimental.UtilityClass;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class ToUtil {
 
     public static AdminMenuDto menuToAdminMenuDto(Menu menu, Integer restaurantId) {
-        return new AdminMenuDto(menu.getId(), menu.getName(), menu.getEnabled(), restaurantId,
-                menu.getPrice());
+        return new AdminMenuDto(menu.getId(), menu.getName(), restaurantId, menu.getPrice());
     }
 
     public static Menu adminMenuDtoToMenu(AdminMenuDto adminMenuDto) {
-        return new Menu(adminMenuDto.getId(), adminMenuDto.getName(), adminMenuDto.getPrice(),
-                adminMenuDto.getEnabled(), null);
+        return new Menu(adminMenuDto.getId(), adminMenuDto.getName(), adminMenuDto.getPrice(), null);
     }
 
     public static AdminMenuDtoWithoutRestaurantId menuToAdminMenuDtoWithoutRestaurantId(Menu menu) {
-        return new AdminMenuDtoWithoutRestaurantId(menu.getId(), menu.getName(), menu.getEnabled(), menu.getPrice());
+        return new AdminMenuDtoWithoutRestaurantId(menu.getId(), menu.getName(), menu.getPrice());
     }
 
     public static List<AdminMenuDtoWithoutRestaurantId> menusToAdminMenusDtoWithoutRestaurantId(List<Menu> menus) {
@@ -59,18 +53,6 @@ public class ToUtil {
                 restaurantWithoutMenuDto.getId(), restaurantWithoutMenuDto.getName(), null, null);
     }
 
-    public static List<VotesDto> votesToVotesDto(List<Vote> votes) {
-        Map<String, Integer> voting = new LinkedHashMap<>();
-        for (Vote vote : votes) {
-            voting.merge(vote.getRestaurant().getName(), 1, (oldValue, newValue) -> oldValue + 1);
-        }
-        List<VotesDto> votesDto = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : voting.entrySet()) {
-            votesDto.add(new VotesDto(entry.getKey(), entry.getValue()));
-        }
-        return votesDto;
-    }
-
     public static UserMenuDto menuToUserMenuDto(Menu menu) {
         return new UserMenuDto(menu.getName(), menu.getPrice());
     }
@@ -90,5 +72,9 @@ public class ToUtil {
 
     public static RestaurantWithoutMenuDto restaurantToRestaurantWithoutMenuDto(Restaurant restaurant) {
         return new RestaurantWithoutMenuDto(restaurant.getId(), restaurant.getName());
+    }
+
+    public static List<RestaurantWithoutMenuDto> restaurantsToRestaurantWithoutMenuTos(List<Restaurant> restaurants) {
+        return restaurants.stream().map(ToUtil::restaurantToRestaurantWithoutMenuDto).collect(Collectors.toList());
     }
 }

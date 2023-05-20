@@ -6,15 +6,19 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.Cache;
+
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "menu")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Getter @Setter
+@Table(name = "dish",
+        uniqueConstraints = @UniqueConstraint(
+                name = "dish_name_per_date_on_restaurant_unique_constraint",
+                columnNames = {"name", "created_date", "restaurant_id"}))
+@Getter
+@Setter
 @NoArgsConstructor
 public class Menu extends AbstractNamedEntity {
 
@@ -23,19 +27,18 @@ public class Menu extends AbstractNamedEntity {
     @NotNull
     private Long price;
 
-    @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
-    @NotNull
-    private Boolean enabled = true;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    public Menu(Integer id, String name, Long price, Boolean enabled, Restaurant restaurant) {
+    public Menu(Integer id, String name, Long price, Restaurant restaurant) {
         super(id, name);
         this.price = price;
-        this.enabled = enabled;
         this.restaurant = restaurant;
     }
+
+    @CreationTimestamp
+    @Column(name = "created_date", nullable = false)
+    private LocalDate createdDate;
 }

@@ -7,6 +7,7 @@ import com.example.restaurantvoting.to.restaurant.AdminRestaurantDto;
 import com.example.restaurantvoting.to.restaurant.RestaurantWithoutMenuDto;
 import com.example.restaurantvoting.util.ToUtil;
 import com.example.restaurantvoting.util.ValidationUtil;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -17,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.restaurantvoting.web.UserVoteController.RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME;
+import static com.example.restaurantvoting.web.UserVoteController.RESTAURANTS_WITH_MENU_CACHE_NAME;
 
 @RestController
 @AllArgsConstructor
@@ -50,21 +52,30 @@ public class AdminRestaurantController {
     }
 
     @GetMapping("/{id}/with-menu")
-    public AdminRestaurantDto getWithMenu(@PathVariable Integer id) {
-        Restaurant restaurant = restaurantRepository.getWithMenu(id);
+    public AdminRestaurantDto getWithMenu(@PathVariable Integer id,
+        @Parameter(description = "Format example: 2024-02-29. Enter today date", required = true)
+        @RequestParam LocalDate date) {
+        Restaurant restaurant = restaurantRepository.getWithMenu(id, date);
         if (Objects.isNull(restaurant)) {
-            throw new NotFoundException("Restaurant not found");
+            throw new NotFoundException("Restaurant with menu not found");
         }
         return ToUtil.restaurantToAdminRestaurantDto(restaurant);
     }
 
-    @GetMapping("with-menu")
-    public List<AdminRestaurantDto> getAllWithMenu() {
-        return ToUtil.restaurantsToRestaurantsTos(restaurantRepository.getAllWithMenu());
+    @GetMapping
+    public List<RestaurantWithoutMenuDto> getAll() {
+        return ToUtil.restaurantsToRestaurantWithoutMenuTos(restaurantRepository.findAll());
+    }
+
+    @GetMapping("/with-menu")
+    public List<AdminRestaurantDto> getAllWithMenu(
+            @Parameter(description = "Format example: 2024-02-29. Enter today date", required = true)
+            @RequestParam LocalDate date) {
+        return ToUtil.restaurantsToRestaurantsTos(restaurantRepository.getAllWithMenu(date));
     }
 
     @PutMapping("/{id}")
-    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
+    @CacheEvict(value = RESTAURANTS_WITH_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody RestaurantWithoutMenuDto restaurantWithoutMenuDto,
                        @PathVariable Integer id) {
@@ -76,7 +87,7 @@ public class AdminRestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
+    @CacheEvict(value = RESTAURANTS_WITH_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         restaurantRepository.deleteById(id);

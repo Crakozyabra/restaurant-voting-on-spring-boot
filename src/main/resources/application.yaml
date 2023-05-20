@@ -37,9 +37,10 @@ spring:
     is-getter: none
 
   # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
+  # https://howtodoinjava.com/spring-boot/spring-boot-caffeine-cache#:~:text=Expire%20After%20Write
   cache:
     cache-names: getRestaurantsWithVisibleMenu
-    caffeine.spec: maximumSize=5000,expireAfterAccess=60s
+    caffeine.spec: maximumSize=5000,expireAfterWrite=60s
 
 logging:
   level:
@@ -54,3 +55,6 @@ server.servlet:
     force: true
 
 springdoc.swagger-ui.path: /
+
+vote:
+  time-limit: '11:00:00'

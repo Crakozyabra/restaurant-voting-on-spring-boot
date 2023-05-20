@@ -44,6 +44,10 @@ public class RestExceptionHandler {
 
     public static final String REFERENTIAL_INTEGRITY_CONSTRAINT_VIOLATION = "referential integrity constraint violation";
 
+    public static final String DISH_NAME_PER_DATE_ON_RESTAURANT = "dish_name_per_date_on_restaurant_unique_constraint";
+
+    public static final String UNIQUE_RESTAURANT_NAME = "restaurant_name_unique_constraint";
+
     @Getter
     private final MessageSource messageSource;
 
@@ -83,10 +87,15 @@ public class RestExceptionHandler {
     ProblemDetail processException(@NonNull Exception ex, HttpServletRequest request,
                                    Map<String, Object> additionalParams) {
         String detail = getRootCause(ex).getMessage().toLowerCase();
+
         if (detail.contains(ONE_VOTE_PER_DATE_UNIQUE_CONSTRAINT)) {
             detail = "User already voted today";
         } else if (detail.contains(REFERENTIAL_INTEGRITY_CONSTRAINT_VIOLATION)) {
             detail = "Referential integrity constraint violation. Possibility resource does not exist";
+        } else if (detail.contains(DISH_NAME_PER_DATE_ON_RESTAURANT)) {
+            detail = "Dish name per date on restaurant must be unique";
+        } else if (detail.contains(UNIQUE_RESTAURANT_NAME)) {
+            detail = "Restaurant name must be unique";
         } else {
             detail = getRootCause(ex).getMessage();
         }

@@ -5,8 +5,7 @@ import com.example.restaurantvoting.repository.RestaurantRepository;
 import com.example.restaurantvoting.to.restaurant.RestaurantWithoutMenuDto;
 import com.example.restaurantvoting.util.JsonUtil;
 import com.example.restaurantvoting.web.AbstractControllerTest;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -23,7 +22,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Autowired
@@ -46,7 +45,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         Assertions.assertEquals(response.getId(), saved.getId());
         Assertions.assertEquals(response.getName(), saved.getName());
     }
-
+    @Order(2)
     @Test
     @WithUserDetails(ADMIN_EMAIL)
     public void get() throws Exception {
@@ -84,7 +83,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         Assertions.assertTrue(updated.isPresent());
         Assertions.assertEquals(getUpdateTo().getName(), updated.get().getName());
     }
-
+    @Order(1)
     @Test
     @WithUserDetails(ADMIN_EMAIL)
     public void delete() throws Exception {

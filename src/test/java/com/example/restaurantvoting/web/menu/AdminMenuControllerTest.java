@@ -14,6 +14,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -71,8 +72,10 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
         Menu updated = menuRepository.findById(adminMenuDto1.getId()).orElse(null);
-        forUpdateTo.setId(updated.getId());
-        MENU_MATCHER.assertMatch(updated, ToUtil.adminMenuDtoToMenu(forUpdateTo));
+        Menu forUpdate = ToUtil.adminMenuDtoToMenu(forUpdateTo);
+        forUpdate.setId(adminMenuDto1.getId());
+        forUpdate.setCreatedDate(LocalDate.now());
+        MENU_MATCHER.assertMatch(updated, forUpdate);
     }
 
     @Test

@@ -18,15 +18,16 @@ public class MenuTestData {
             MatcherFactory.usingIgnoringFieldsComparator(Menu.class, "restaurant");
 
     public static AdminMenuDto getNewTo() {
-        return new AdminMenuDto(null, "New menu item", true, ITALIAN_RESTAURANT_ID, 100L);
+        return new AdminMenuDto(null, "New menu item", ITALIAN_RESTAURANT_ID, 100L);
     }
 
     public static Menu getUpdated() {
-        return new Menu(adminMenuDto1.getId(), "Updated menu item", 100L, true, null);
+        return new Menu(adminMenuDto1.getId(), "Updated menu item", 100L,
+                null);
     }
 
     public static AdminMenuDto getUpdatedTo() {
         return new AdminMenuDto(
-                null, getUpdated().getName(), getUpdated().getEnabled(), ITALIAN_RESTAURANT_ID, getUpdated().getPrice());
+                null, getUpdated().getName(), ITALIAN_RESTAURANT_ID, getUpdated().getPrice());
     }
 }

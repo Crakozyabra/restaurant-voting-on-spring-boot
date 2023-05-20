@@ -20,7 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
-import static com.example.restaurantvoting.web.UserVoteController.RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME;
+import static com.example.restaurantvoting.web.UserVoteController.RESTAURANTS_WITH_MENU_CACHE_NAME;
 
 @RestController
 @AllArgsConstructor
@@ -34,7 +34,7 @@ public class AdminMenuController {
     private RestaurantRepository restaurantRepository;
 
     @PostMapping
-    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
+    @CacheEvict(value = RESTAURANTS_WITH_MENU_CACHE_NAME, allEntries = true)
     public ResponseEntity<AdminMenuDto> create(@Valid @RequestBody AdminMenuDto adminMenuDto) {
         ValidationUtil.checkNew(adminMenuDto);
         Menu fromTo = ToUtil.adminMenuDtoToMenu(adminMenuDto);
@@ -54,21 +54,20 @@ public class AdminMenuController {
     }
 
     @PutMapping("/{id}")
-    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
+    @CacheEvict(value = RESTAURANTS_WITH_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody AdminMenuDto adminMenuDto, @PathVariable Integer id) {
         ValidationUtil.assureIdConsistent(adminMenuDto, id);
         Restaurant restaurant = restaurantRepository.getReferenceById(adminMenuDto.getRestaurantId());
         Menu menu = menuRepository.findById(id).orElseThrow(() -> new NotFoundException("Menu not found"));
         menu.setRestaurant(restaurant);
-        menu.setEnabled(adminMenuDto.getEnabled());
         menu.setPrice(adminMenuDto.getPrice());
         menu.setName(adminMenuDto.getName());
         menuRepository.save(menu);
     }
 
     @DeleteMapping("/{id}")
-    @CacheEvict(value = RESTAURANTS_WITH_VISIBLE_MENU_CACHE_NAME, allEntries = true)
+    @CacheEvict(value = RESTAURANTS_WITH_MENU_CACHE_NAME, allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         menuRepository.deleteById(id);
