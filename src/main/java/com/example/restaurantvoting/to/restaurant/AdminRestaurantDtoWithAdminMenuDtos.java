@@ -2,7 +2,7 @@ package com.example.restaurantvoting.to.restaurant;
 
 
 import com.example.restaurantvoting.to.AbstractNamedDto;
-import com.example.restaurantvoting.to.menu.UserMenuDto;
+import com.example.restaurantvoting.to.menu.AdminMenuDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 
-@NoArgsConstructor
 @Getter
-public class UserRestaurantDto extends AbstractNamedDto {
+@NoArgsConstructor
+public class AdminRestaurantDtoWithAdminMenuDtos extends AbstractNamedDto {
 
     @NotNull
-    private List<UserMenuDto> menus;
+    private List<AdminMenuDto> menus;
 
-    public UserRestaurantDto(Integer id, String name, List<UserMenuDto> menus) {
+    public AdminRestaurantDtoWithAdminMenuDtos(Integer id, String name, List<AdminMenuDto> menus) {
         super(id, name);
         this.menus = menus;
     }

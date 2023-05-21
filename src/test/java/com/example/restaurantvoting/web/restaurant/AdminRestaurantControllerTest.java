@@ -2,7 +2,7 @@ package com.example.restaurantvoting.web.restaurant;
 
 import com.example.restaurantvoting.model.Restaurant;
 import com.example.restaurantvoting.repository.RestaurantRepository;
-import com.example.restaurantvoting.to.restaurant.RestaurantWithoutMenuDto;
+import com.example.restaurantvoting.to.restaurant.RestaurantDto;
 import com.example.restaurantvoting.util.JsonUtil;
 import com.example.restaurantvoting.web.AbstractControllerTest;
 import org.junit.jupiter.api.*;
@@ -12,6 +12,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -39,12 +40,13 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(header().exists(HEADER_LOCATION))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString(getNewTo().getName())));
-        RestaurantWithoutMenuDto response = RESTAURANT_WITHOUT_MENU_DTO_MATCHER.readFromJson(resultActions);
+        RestaurantDto response = RESTAURANT_WITHOUT_MENU_DTO_MATCHER.readFromJson(resultActions);
         Restaurant saved = restaurantRepository.findById(response.getId()).orElse(null);
         Assertions.assertTrue(Objects.nonNull(saved));
         Assertions.assertEquals(response.getId(), saved.getId());
         Assertions.assertEquals(response.getName(), saved.getName());
     }
+
     @Order(2)
     @Test
     @WithUserDetails(ADMIN_EMAIL)
@@ -59,16 +61,15 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ADMIN_EMAIL)
     public void getWithMenu() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "/" + ITALIAN_RESTAURANT_ID + "/with-menu"))
+        perform(MockMvcRequestBuilders.get(REST_URL + "/" + ITALIAN_RESTAURANT_ID + "/with-menu")
+                .queryParam("date", LocalDate.now().minusDays(1).toString()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(containsString(RESTAURANT_NAME)))
                 .andExpect(content().string(containsString(JsonUtil.writeValue(adminMenuDto1))))
                 .andExpect(content().string(containsString(JsonUtil.writeValue(adminMenuDto2))))
-                .andExpect(content().string(containsString(JsonUtil.writeValue(adminMenuDto3))))
-                .andExpect(content().string(containsString(JsonUtil.writeValue(adminMenuDto4))))
-                .andExpect(content().string(containsString(JsonUtil.writeValue(adminMenuDto5))));
+                .andExpect(content().string(containsString(JsonUtil.writeValue(adminMenuDto3))));
     }
 
     @Test
@@ -83,6 +84,7 @@ public class AdminRestaurantControllerTest extends AbstractControllerTest {
         Assertions.assertTrue(updated.isPresent());
         Assertions.assertEquals(getUpdateTo().getName(), updated.get().getName());
     }
+
     @Order(1)
     @Test
     @WithUserDetails(ADMIN_EMAIL)

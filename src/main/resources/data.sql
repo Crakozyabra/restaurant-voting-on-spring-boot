@@ -14,7 +14,7 @@ VALUES (1, 'ADMIN'),
        (2, 'USER');
 
 INSERT INTO dish (restaurant_id, name, price, created_date)
-VALUES (1, 'pizza', 106, current_date),
+VALUES (1, 'pizza', 106, current_date - interval '1' day),
        (1, 'risotto', 201, current_date - interval '1' day),
        (1, 'lasagne', 302, current_date - interval '1' day),
        (1, 'ravioli', 403, current_date),

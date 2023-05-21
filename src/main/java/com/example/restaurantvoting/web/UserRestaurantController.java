@@ -2,7 +2,7 @@ package com.example.restaurantvoting.web;
 
 import com.example.restaurantvoting.model.Restaurant;
 import com.example.restaurantvoting.repository.RestaurantRepository;
-import com.example.restaurantvoting.to.restaurant.UserRestaurantDto;
+import com.example.restaurantvoting.to.restaurant.UserRestaurantDtoWithUserMenuDtos;
 import com.example.restaurantvoting.util.ToUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,8 +27,8 @@ public class UserRestaurantController {
 
     @GetMapping
     @Cacheable(RESTAURANTS_WITH_MENU_CACHE_NAME)
-    public List<UserRestaurantDto> getWithMenu() {
+    public List<UserRestaurantDtoWithUserMenuDtos> getWithMenu() {
         List<Restaurant> restaurants = restaurantRepository.getAllWithMenu(LocalDate.now());
-        return ToUtil.restaurantsToUserRestaurantTos(restaurants);
+        return ToUtil.restaurantsToUserRestaurantDtosWithUserMenuDtos(restaurants);
     }
 }

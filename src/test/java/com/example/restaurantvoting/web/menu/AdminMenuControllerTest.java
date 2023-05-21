@@ -2,7 +2,7 @@ package com.example.restaurantvoting.web.menu;
 
 import com.example.restaurantvoting.model.Menu;
 import com.example.restaurantvoting.repository.MenuRepository;
-import com.example.restaurantvoting.to.menu.AdminMenuDto;
+import com.example.restaurantvoting.to.menu.AdminMenuDtoWithRestaurantId;
 import com.example.restaurantvoting.util.JsonUtil;
 import com.example.restaurantvoting.util.ToUtil;
 import com.example.restaurantvoting.web.AbstractControllerTest;
@@ -37,19 +37,19 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ADMIN_EMAIL)
     public void create() throws Exception {
-        AdminMenuDto newAdminMenuDto = MenuTestData.getNewTo();
+        AdminMenuDtoWithRestaurantId newAdminMenuDtoWithRestaurantId = MenuTestData.getNewTo();
         ResultActions resultActions = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newAdminMenuDto)))
+                .content(JsonUtil.writeValue(newAdminMenuDtoWithRestaurantId)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(header().exists(HEADER_LOCATION))
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
-        AdminMenuDto response = ADMIN_MENU_DTO_MATCHER.readFromJson(resultActions);
+        AdminMenuDtoWithRestaurantId response = ADMIN_MENU_DTO_MATCHER.readFromJson(resultActions);
         Menu saved = menuRepository.findById(response.getId()).orElse(null);
         Assertions.assertTrue(Objects.nonNull(saved));
         response.setId(saved.getId());
-        ADMIN_MENU_DTO_MATCHER.assertMatch(ToUtil.menuToAdminMenuDto(saved, newAdminMenuDto.getRestaurantId()), response);
+        ADMIN_MENU_DTO_MATCHER.assertMatch(ToUtil.menuToAdminMenuDtoWithRestaurantId(saved, newAdminMenuDtoWithRestaurantId.getRestaurantId()), response);
     }
 
     @Test
@@ -65,16 +65,16 @@ public class AdminMenuControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(ADMIN_EMAIL)
     public void update() throws Exception {
-        AdminMenuDto forUpdateTo = MenuTestData.getUpdatedTo();
+        AdminMenuDtoWithRestaurantId forUpdateTo = MenuTestData.getUpdatedTo();
         perform(MockMvcRequestBuilders.put(REST_URL + "/" + adminMenuDto1.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(forUpdateTo)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         Menu updated = menuRepository.findById(adminMenuDto1.getId()).orElse(null);
-        Menu forUpdate = ToUtil.adminMenuDtoToMenu(forUpdateTo);
+        Menu forUpdate = ToUtil.adminMenuDtoWithRestaurantIdToMenu(forUpdateTo);
         forUpdate.setId(adminMenuDto1.getId());
-        forUpdate.setCreatedDate(LocalDate.now());
+        forUpdate.setCreatedDate(LocalDate.now().minusDays(1));
         MENU_MATCHER.assertMatch(updated, forUpdate);
     }
 

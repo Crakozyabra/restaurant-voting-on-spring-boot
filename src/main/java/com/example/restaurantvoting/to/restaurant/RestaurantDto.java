@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class RestaurantWithoutMenuDto extends AbstractNamedDto {
+public class RestaurantDto extends AbstractNamedDto {
 
-    public RestaurantWithoutMenuDto(Integer id, String name) {
+    public RestaurantDto(Integer id, String name) {
         super(id, name);
     }
 }

@@ -1,23 +1,21 @@
 package com.example.restaurantvoting.to.menu;
 
-
+import com.example.restaurantvoting.to.AbstractNamedDto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Getter
 @NoArgsConstructor
-public class AdminMenuDto extends AdminMenuDtoWithoutRestaurantId {
+public class AdminMenuDto extends AbstractNamedDto {
 
-    @Min(1)
+    @Min(0)
     @NotNull
-    private Integer restaurantId;
+    protected Long price;
 
-    public AdminMenuDto(Integer id, String name, Integer restaurantId, Long price) {
-        super(id, name, price);
-        this.restaurantId = restaurantId;
+    public AdminMenuDto(Integer id, String name, Long price) {
+        super(id, name);
         this.price = price;
     }
 }

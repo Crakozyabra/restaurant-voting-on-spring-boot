@@ -1,41 +1,41 @@
 package com.example.restaurantvoting.web.restaurant;
 
-import com.example.restaurantvoting.to.menu.AdminMenuDtoWithoutRestaurantId;
-import com.example.restaurantvoting.to.restaurant.RestaurantWithoutMenuDto;
+import com.example.restaurantvoting.to.menu.AdminMenuDto;
+import com.example.restaurantvoting.to.menu.UserMenuDto;
+import com.example.restaurantvoting.to.restaurant.RestaurantDto;
 import com.example.restaurantvoting.web.MatcherFactory;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class RestaurantTestData {
-    public static final MatcherFactory.Matcher<RestaurantWithoutMenuDto> RESTAURANT_WITHOUT_MENU_DTO_MATCHER =
-            MatcherFactory.usingIgnoringFieldsComparator(RestaurantWithoutMenuDto.class);
+    public static final MatcherFactory.Matcher<RestaurantDto> RESTAURANT_WITHOUT_MENU_DTO_MATCHER =
+            MatcherFactory.usingIgnoringFieldsComparator(RestaurantDto.class);
 
     public static final Integer ITALIAN_RESTAURANT_ID = 1;
     public static final Integer RUSSIAN_RESTAURANT_ID = 3;
     public static final String HEADER_LOCATION = "Location";
     public static final String RESTAURANT_NAME = "Italian restaurant";
 
-    public static RestaurantWithoutMenuDto italianRestaurantDto = new RestaurantWithoutMenuDto(
+    public static RestaurantDto italianRestaurantDto = new RestaurantDto(
             ITALIAN_RESTAURANT_ID, "Italian restaurant");
 
-    public static AdminMenuDtoWithoutRestaurantId adminMenuDto1 =
-            new AdminMenuDtoWithoutRestaurantId(1, "pizza", 106L);
-    public static AdminMenuDtoWithoutRestaurantId adminMenuDto2 =
-            new AdminMenuDtoWithoutRestaurantId(2, "risotto", 201L);
-    public static AdminMenuDtoWithoutRestaurantId adminMenuDto3 =
-            new AdminMenuDtoWithoutRestaurantId(3, "lasagne", 302L);
-    public static AdminMenuDtoWithoutRestaurantId adminMenuDto4 =
-            new AdminMenuDtoWithoutRestaurantId(4, "ravioli", 403L);
-    public static AdminMenuDtoWithoutRestaurantId adminMenuDto5 =
-            new AdminMenuDtoWithoutRestaurantId(5, "bryschetta", 503L);
 
-    public static RestaurantWithoutMenuDto getNewTo() {
-        return new RestaurantWithoutMenuDto(null, "New restaurant");
+
+    public static UserMenuDto userMenuDto4 = new UserMenuDto("ravioli", 403L);
+    public static UserMenuDto userMenuDto5 = new UserMenuDto("bryschetta", 503L);
+
+    public static AdminMenuDto adminMenuDto1 =
+            new AdminMenuDto(1, "pizza", 106L);
+    public static AdminMenuDto adminMenuDto2 =
+            new AdminMenuDto(2, "risotto", 201L);
+    public static AdminMenuDto adminMenuDto3 =
+            new AdminMenuDto(3, "lasagne", 302L);
+
+    public static RestaurantDto getNewTo() {
+        return new RestaurantDto(null, "New restaurant");
     }
 
-    public static RestaurantWithoutMenuDto getUpdateTo() {
-        return new RestaurantWithoutMenuDto(null, "Update restaurant");
+    public static RestaurantDto getUpdateTo() {
+        return new RestaurantDto(null, "Update restaurant");
     }
-
-
 }

@@ -74,7 +74,7 @@ public class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(ADMIN_EMAIL)
-    public void updateBeforeTimeVotingLimit() throws Exception {
+    public void updateBeforeTimeVoteLimit() throws Exception {
         voteService.setTimeVotingLimit(LocalTime.MAX);
         VoteDto forUpdate = new VoteDto(RUSSIAN_RESTAURANT_ID);
         perform(MockMvcRequestBuilders.put(REST_URL)
@@ -89,14 +89,17 @@ public class UserVoteControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(ADMIN_EMAIL)
-    public void updateAfterTimeVotingLimit() throws Exception {
-        voteService.setTimeVotingLimit(LocalTime.MIN);
+    public void updateAfterTimeVoteLimit() throws Exception {
+        LocalTime voteLimitTime = LocalTime.MIN;
+        voteService.setTimeVotingLimit(voteLimitTime);
         VoteDto forUpdate = new VoteDto(RUSSIAN_RESTAURANT_ID);
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(forUpdate)))
                 .andDo(print())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isConflict())
+                .andExpect(content().string(
+                        containsString("Additional vote after " + voteLimitTime + " not allowed")));
         Optional<Vote> updated = voteRepository.findVoteByUser_IdAndVoteDateIs(ADMIN_ID, LocalDate.now());
         Assertions.assertTrue(updated.isPresent());
         Assertions.assertEquals(updated.get().getRestaurant().getId(), ITALIAN_RESTAURANT_ID);
